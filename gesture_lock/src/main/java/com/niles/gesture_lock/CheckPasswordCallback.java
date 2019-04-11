@@ -45,7 +45,7 @@ public abstract class CheckPasswordCallback implements GestureLockListener {
                         lockView.reset();
                     }
                 }
-            }, 2000);
+            }, 1000);
         }
     }
 
