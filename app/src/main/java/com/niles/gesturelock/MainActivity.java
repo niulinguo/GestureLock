@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,17 +98,25 @@ public class MainActivity extends AppCompatActivity {
             case RC_CHECK_PASSWORD_FOR_SETTING: {
                 if (resultCode == RESULT_OK) {
                     openSettingActivity();
+                } else if (resultCode == CheckPasswordActivity.RESULT_ERROR) {
+                    passwordCheckFailure();
                 }
                 break;
             }
             case RC_CHECK_PASSWORD_FOR_CLOSE: {
                 if (resultCode == RESULT_OK) {
                     mPasswordManager.clearPassword();
+                } else if (resultCode == CheckPasswordActivity.RESULT_ERROR) {
+                    passwordCheckFailure();
                 }
 
                 refreshUI();
                 break;
             }
         }
+    }
+
+    private void passwordCheckFailure() {
+        Toast.makeText(this, "密码错误太多次", Toast.LENGTH_SHORT).show();
     }
 }
