@@ -30,10 +30,10 @@ public abstract class CheckPasswordCallback implements GestureLockListener {
             view.reset();
             onCancel();
         } else if (isSamePassword(numberList)) {
-            view.setEnabled(true);
+            view.setError(false);
             onPasswordSuccess();
         } else {
-            view.setEnabled(false);
+            view.setError(true);
             onPasswordFailure();
 
             final WeakReference<GestureLockView> weakReference = new WeakReference<>(view);

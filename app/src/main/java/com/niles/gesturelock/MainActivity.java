@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         GestureLockView gestureLockView = findViewById(R.id.gesture_lock_view);
         gestureLockView.initNumberList(new byte[]{6, 3, 4});
+//        gestureLockView.setTouchable(false);
         gestureLockView.setGestureLockListener(new CheckPasswordCallback(new byte[]{6, 3, 4, 7}) {
             @Override
             public void onPasswordSuccess() {

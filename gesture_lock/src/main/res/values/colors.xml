@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--边框色-->
+    <color name="nlg_gesture_lock_border">#555</color>
+    <!--空白色-->
+    <color name="nlg_gesture_lock_empty">#fff</color>
+    <!--主色调-->
+    <color name="nlg_gesture_lock_primary">#008577</color>
+    <!--错误色调-->
+    <color name="nlg_gesture_lock_error">#d44</color>
+    <color name="nlg_gesture_lock_error_trans">#3d44</color>
+
+    <!--外圆边框颜色（正常、选择、出错）-->
+    <color name="nlg_gesture_lock_circle_border">@color/nlg_gesture_lock_border</color>
+    <color name="nlg_gesture_lock_circle_border_selected">@color/nlg_gesture_lock_primary</color>
+    <color name="nlg_gesture_lock_circle_border_error">@color/nlg_gesture_lock_error</color>
+
+    <!--外圆填充颜色（正常、选择、出错）-->
+    <color name="nlg_gesture_lock_circle">@color/nlg_gesture_lock_empty</color>
+    <color name="nlg_gesture_lock_circle_selected">@color/nlg_gesture_lock_empty</color>
+    <color name="nlg_gesture_lock_circle_error">@color/nlg_gesture_lock_error_trans</color>
+
+    <!--内圆颜色（正常、选择、出错）-->
+    <color name="nlg_gesture_lock_circle_center">@color/nlg_gesture_lock_empty</color>
+    <color name="nlg_gesture_lock_circle_center_selected">@color/nlg_gesture_lock_primary</color>
+    <color name="nlg_gesture_lock_circle_center_error">@color/nlg_gesture_lock_error</color>
+
+    <!--线颜色（正常、出错）-->
+    <color name="nlg_gesture_lock_line">@color/nlg_gesture_lock_primary</color>
+    <color name="nlg_gesture_lock_line_error">@color/nlg_gesture_lock_error</color>
+
+</resources>

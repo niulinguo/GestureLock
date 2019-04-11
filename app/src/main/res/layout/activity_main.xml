@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,15 +14,6 @@
         android:layout_gravity="center_horizontal"
         android:background="#eee"
         android:padding="16dp"
-        app:nlg_circle_border_color="@color/gesture_lock_circle_border_color"
-        app:nlg_circle_border_size="1dp"
-        app:nlg_circle_center_color="@color/gesture_lock_circle_center_color"
-        app:nlg_circle_center_radius="6dp"
-        app:nlg_circle_color="@color/gesture_lock_circle_color"
-        app:nlg_circle_distance="66dp"
-        app:nlg_circle_radius="22dp"
-        app:nlg_line_color="@color/gesture_lock_line_color"
-        app:nlg_line_size="2dp"
         />
 
 </LinearLayout>

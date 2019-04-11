@@ -3,6 +3,7 @@ package com.niles.gesture_lock;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -51,7 +52,8 @@ public class GestureLockView extends View {
     private Paint mDrawPaint;
     private Point mFingerPoint;
     private GestureLockListener mGestureLockListener;
-    private boolean isAlive = true;
+    private boolean mIsAlive = true;
+    private boolean mTouchable = true;
 
     public GestureLockView(Context context) {
         super(context);
@@ -84,19 +86,46 @@ public class GestureLockView extends View {
 
     private void init(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 
+        Resources resources = getResources();
+
+        mCircleRadius = resources.getDimensionPixelSize(R.dimen.nlg_gesture_lock_circle_radius);
+        mCircleBorderSize = resources.getDimensionPixelSize(R.dimen.nlg_gesture_lock_circle_border_size);
+        mCircleBorderColor = resources.getColorStateList(R.color.nlg_gesture_lock_circle_border_color);
+        mCircleColor = resources.getColorStateList(R.color.nlg_gesture_lock_circle_color);
+
+        mCircleCenterRadius = mCircleRadius / 4;
+        mCircleCenterColor = resources.getColorStateList(R.color.nlg_gesture_lock_circle_center_color);
+
+        mLineSize = resources.getDimensionPixelSize(R.dimen.nlg_gesture_lock_line_size);
+        mLineColor = resources.getColorStateList(R.color.nlg_gesture_lock_line_color);
+
+        mCircleDistance = mCircleRadius * 3;
+
         if (attrs != null) {
             TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.GestureLockView, defStyleAttr, defStyleAttr);
 
             mCircleRadius = typedArray.getDimensionPixelSize(R.styleable.GestureLockView_nlg_circle_radius, mCircleRadius);
             mCircleBorderSize = typedArray.getDimensionPixelSize(R.styleable.GestureLockView_nlg_circle_border_size, mCircleBorderSize);
-            mCircleBorderColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_circle_border_color);
-            mCircleColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_circle_color);
+            ColorStateList circleBorderColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_circle_border_color);
+            if (circleBorderColor != null) {
+                mCircleBorderColor = circleBorderColor;
+            }
+            ColorStateList circleColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_circle_color);
+            if (circleColor != null) {
+                mCircleColor = circleColor;
+            }
 
             mCircleCenterRadius = typedArray.getDimensionPixelSize(R.styleable.GestureLockView_nlg_circle_center_radius, mCircleCenterRadius);
-            mCircleCenterColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_circle_center_color);
+            ColorStateList circleCenterColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_circle_center_color);
+            if (circleCenterColor != null) {
+                mCircleCenterColor = circleCenterColor;
+            }
 
             mLineSize = typedArray.getDimensionPixelSize(R.styleable.GestureLockView_nlg_line_size, mLineSize);
-            mLineColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_line_color);
+            ColorStateList lineColor = typedArray.getColorStateList(R.styleable.GestureLockView_nlg_line_color);
+            if (lineColor != null) {
+                mLineColor = lineColor;
+            }
 
             mCircleDistance = typedArray.getDimensionPixelSize(R.styleable.GestureLockView_nlg_circle_distance, mCircleDistance);
 
@@ -124,6 +153,13 @@ public class GestureLockView extends View {
         int height = getPaddingTop() + getPaddingBottom() + 2 * mCircleDistance + 2 * mCircleRadius + mCircleBorderSize;
 
         setMeasuredDimension(width, height);
+    }
+
+    /**
+     * 设置是否可触控
+     */
+    public void setTouchable(boolean touchable) {
+        mTouchable = touchable;
     }
 
     @Override
@@ -252,28 +288,43 @@ public class GestureLockView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        if (!mTouchable) {
+            // 不可触控，不相应TouchEvent
+            return false;
+        }
+
         int action = event.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE: {
 
-                if (action == MotionEvent.ACTION_DOWN) {
+                Byte nearPoint;
+
+                if (mFingerPoint == null) {
                     reset();
 
-                    if (mGestureLockListener != null) {
-                        mGestureLockListener.onGestureStart(this);
-                    }
-                }
-
-                // 手指按下，更新手指位置
-                if (mFingerPoint == null) {
                     mFingerPoint = new Point(event.getX(), event.getY());
+
+                    // 计算手指点的位置
+                    nearPoint = computerNearPoint(mFingerPoint);
+
+                    if (nearPoint == null) {
+                        // 如果手指没有点到圆上，不相应手势
+                        return false;
+                    } else {
+                        // 手势开始
+                        if (mGestureLockListener != null) {
+                            mGestureLockListener.onGestureStart(this);
+                        }
+                    }
                 } else {
                     mFingerPoint.update(event.getX(), event.getY());
+
+                    // 计算手指是否在某点附近
+                    nearPoint = computerNearPoint(mFingerPoint);
                 }
 
-                // 计算手指是否在某点附近
-                Byte nearPoint = computerNearPoint(mFingerPoint);
                 if (nearPoint != null && !mSelectNumberList.contains(nearPoint)) {
                     // 将点添加进路径中
                     addNumberToList(nearPoint);
@@ -287,6 +338,7 @@ public class GestureLockView extends View {
                 mFingerPoint = null;
 
                 if (mGestureLockListener != null) {
+                    // 手势结束，回调结果
                     mGestureLockListener.onGestureFinish(this, mSelectNumberList.toArray(new Byte[]{}));
                 }
                 break;
@@ -297,6 +349,17 @@ public class GestureLockView extends View {
         return true;
     }
 
+    /**
+     * 设置是否错误
+     * 错误时会显示错误样式
+     */
+    public void setError(boolean error) {
+        setEnabled(!error);
+    }
+
+    /**
+     * 重置
+     */
     public void reset() {
         mSelectNumberList.clear();
         mFingerPoint = null;
@@ -310,28 +373,28 @@ public class GestureLockView extends View {
      * 如果最后一个数字与要加入的数字之间有个中间数字，那么将中间数字加入列表
      */
     private void addNumberToList(byte currNumber) {
-        if (!mSelectNumberList.isEmpty()) {
-            byte lastNumber = mSelectNumberList.get(mSelectNumberList.size() - 1);
-
-            int lastRow = lastNumber / 3;
-            int lastCol = lastNumber % 3;
-
-            int currRow = currNumber / 3;
-            int currCol = currNumber % 3;
-
-            // 判断是否有中间点
-            if ((lastCol + currCol) % 2 == 0 && (lastRow + currRow) % 2 == 0) {
-                int centerCol = (lastCol + currCol) / 2;
-                int centerRow = (lastRow + currRow) / 2;
-
-                byte centerNumber = (byte) (centerRow * 3 + centerCol);
-
-                // 如果中间点不在路径中，先将中间点加入路径
-                if (!mSelectNumberList.contains(centerNumber)) {
-                    mSelectNumberList.add(centerNumber);
-                }
-            }
-        }
+//        if (!mSelectNumberList.isEmpty()) {
+//            byte lastNumber = mSelectNumberList.get(mSelectNumberList.size() - 1);
+//
+//            int lastRow = lastNumber / 3;
+//            int lastCol = lastNumber % 3;
+//
+//            int currRow = currNumber / 3;
+//            int currCol = currNumber % 3;
+//
+//            // 判断是否有中间点
+//            if ((lastCol + currCol) % 2 == 0 && (lastRow + currRow) % 2 == 0) {
+//                int centerCol = (lastCol + currCol) / 2;
+//                int centerRow = (lastRow + currRow) / 2;
+//
+//                byte centerNumber = (byte) (centerRow * 3 + centerCol);
+//
+//                // 如果中间点不在路径中，先将中间点加入路径
+//                if (!mSelectNumberList.contains(centerNumber)) {
+//                    mSelectNumberList.add(centerNumber);
+//                }
+//            }
+//        }
 
         mSelectNumberList.add(currNumber);
     }
@@ -358,21 +421,24 @@ public class GestureLockView extends View {
         return null;
     }
 
+    /**
+     * 用于判断View是否被销毁
+     */
     public boolean isAlive() {
-        return isAlive;
+        return mIsAlive;
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        isAlive = false;
+        mIsAlive = false;
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        isAlive = true;
+        mIsAlive = true;
     }
 }

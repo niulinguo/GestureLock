@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--外圆半径-->
+    <dimen name="nlg_gesture_lock_circle_radius">30dp</dimen>
+    <!--外圆边框宽度-->
+    <dimen name="nlg_gesture_lock_circle_border_size">1dp</dimen>
+    <!--线宽度-->
+    <dimen name="nlg_gesture_lock_line_size">2dp</dimen>
+</resources>
