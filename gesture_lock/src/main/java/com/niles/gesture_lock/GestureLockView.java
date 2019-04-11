@@ -149,10 +149,36 @@ public class GestureLockView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int width = getPaddingLeft() + getPaddingRight() + 2 * mCircleDistance + 2 * mCircleRadius + mCircleBorderSize;
-        int height = getPaddingTop() + getPaddingBottom() + 2 * mCircleDistance + 2 * mCircleRadius + mCircleBorderSize;
+        int measuredWidth, measuredHeight;
 
-        setMeasuredDimension(width, height);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+
+        if (widthMode == MeasureSpec.EXACTLY) {
+            if (getPaddingLeft() == 0 && getPaddingRight() == 0) {
+                int padding = widthSize / 10;
+                setPadding(padding, getPaddingTop(), padding, getPaddingBottom());
+            }
+
+            if (getPaddingTop() == 0 && getPaddingBottom() == 0) {
+                int padding = widthSize / 10;
+                setPadding(getPaddingLeft(), padding, getPaddingRight(), padding);
+            }
+
+            int contentWidth = widthSize - (getPaddingLeft() + getPaddingRight());
+
+            measuredWidth = contentWidth + (getPaddingLeft() + getPaddingRight());
+            measuredHeight = contentWidth + (getPaddingTop() + getPaddingBottom());
+
+            mCircleRadius = contentWidth / 8;
+            mCircleCenterRadius = mCircleRadius / 4;
+            mCircleDistance = mCircleRadius * 3;
+        } else {
+            measuredWidth = getPaddingLeft() + getPaddingRight() + 2 * mCircleDistance + 2 * mCircleRadius + mCircleBorderSize;
+            measuredHeight = getPaddingTop() + getPaddingBottom() + 2 * mCircleDistance + 2 * mCircleRadius + mCircleBorderSize;
+        }
+
+        setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
     /**
@@ -411,8 +437,8 @@ public class GestureLockView extends View {
             float cx = getPaddingLeft() + mCircleRadius + mCircleDistance * col;
             float cy = getPaddingTop() + mCircleRadius + mCircleDistance * row;
 
-            // 距离近的标准：圆半径的0.75倍以内
-            if (point.distance(cx, cy) < mCircleRadius * 0.75) {
+            // 距离近的标准：圆半径的0.8倍以内
+            if (point.distance(cx, cy) < mCircleRadius * 0.8) {
                 return i;
             }
 

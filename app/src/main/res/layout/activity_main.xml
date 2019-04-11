@@ -9,11 +9,10 @@
 
     <com.niles.gesture_lock.GestureLockView
         android:id="@+id/gesture_lock_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_margin="32dp"
         android:background="#eee"
-        android:padding="16dp"
         />
 
 </LinearLayout>
