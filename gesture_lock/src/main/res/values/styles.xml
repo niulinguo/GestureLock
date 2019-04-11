@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="nlg_circle_radius" format="reference|dimension"/>
+    <attr name="nlg_circle_border_size" format="reference|dimension"/>
+    <attr name="nlg_circle_border_color" format="reference|color"/>
+    <attr name="nlg_circle_color" format="reference|color"/>
+
+    <attr name="nlg_circle_center_radius" format="reference|dimension"/>
+    <attr name="nlg_circle_center_color" format="reference|color"/>
+
+    <attr name="nlg_line_size" format="reference|dimension"/>
+    <attr name="nlg_line_color" format="reference|color"/>
+
+    <attr name="nlg_circle_distance" format="reference|dimension"/>
+
+    <declare-styleable name="GestureLockView">
+        <attr name="nlg_circle_radius"/>
+        <attr name="nlg_circle_border_size"/>
+        <attr name="nlg_circle_border_color"/>
+        <attr name="nlg_circle_color"/>
+
+        <attr name="nlg_circle_center_radius"/>
+        <attr name="nlg_circle_center_color"/>
+
+        <attr name="nlg_line_size"/>
+        <attr name="nlg_line_color"/>
+
+        <attr name="nlg_circle_distance"/>
+    </declare-styleable>
+
+</resources>
