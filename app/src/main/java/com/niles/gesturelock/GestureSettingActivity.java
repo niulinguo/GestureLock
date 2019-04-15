@@ -24,10 +24,17 @@ public class GestureSettingActivity extends AppCompatActivity {
 
         mTipGestureView = findViewById(R.id.glv_tip);
         mTipGestureView.setTouchable(false);
-
         mTipView = findViewById(R.id.tv_tip);
-
         mPasswordGestureView = findViewById(R.id.glv_password);
+
+        setPassword();
+    }
+
+    /**
+     * 设置手势密码
+     */
+    private void setPassword() {
+        mPasswordGestureView.reset();
         mPasswordGestureView.setGestureLockListener(new PasswordSettingCallback() {
             @Override
             protected void onPasswordFailure(String msg) {
@@ -42,6 +49,9 @@ public class GestureSettingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 确认手势密码
+     */
     private void setPasswordAgain(final byte[] password) {
         mTipGestureView.initNumberList(password);
 
@@ -64,6 +74,9 @@ public class GestureSettingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 密码设置成功
+     */
     private void success(byte[] password) {
         Intent data = new Intent();
         data.putExtra(EXTRA_PASSWORD, password);

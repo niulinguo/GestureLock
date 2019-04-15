@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case RC_SETTING_PASSWORD: {
+                // 设置手势密码
                 if (resultCode == RESULT_OK && data != null) {
                     byte[] password = data.getByteArrayExtra(GestureSettingActivity.EXTRA_PASSWORD);
                     mPasswordManager.savePassword(password);
@@ -96,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case RC_CHECK_PASSWORD_FOR_SETTING: {
+                // 检查手势密码 For 设置手势密码
                 if (resultCode == RESULT_OK) {
                     openSettingActivity();
                 } else if (resultCode == CheckPasswordActivity.RESULT_ERROR) {
@@ -104,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case RC_CHECK_PASSWORD_FOR_CLOSE: {
+                // 检查手势免密 For 清除手势密码
                 if (resultCode == RESULT_OK) {
                     mPasswordManager.clearPassword();
                 } else if (resultCode == CheckPasswordActivity.RESULT_ERROR) {
@@ -116,7 +119,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 手势密码错误多次
+     */
     private void passwordCheckFailure() {
         Toast.makeText(this, "密码错误太多次", Toast.LENGTH_SHORT).show();
+
+        // 清除手势密码
+        mPasswordManager.clearPassword();
+        refreshUI();
     }
 }
