@@ -7,4 +7,5 @@
     <dimen name="nlg_gesture_lock_circle_border_size">1dp</dimen>
     <!--线宽度-->
     <dimen name="nlg_gesture_lock_line_size">2dp</dimen>
+
 </resources>
