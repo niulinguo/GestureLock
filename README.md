@@ -87,3 +87,6 @@ dependencies {
 如果layout_width设置为match_parent或者固定宽度，则内部的布局为自适应。
 如果layout_width设置为wrap_content，则内部的布局根据dimens.xml中定义的布局大小绘制。
 
+### Demo
+
+![Demo](./gif/gesture_demo.gif)
